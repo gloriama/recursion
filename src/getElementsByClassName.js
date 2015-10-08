@@ -4,7 +4,7 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className) {
+var getElementsByClassName = function(className, parent) {
   var contains = function(list, item) {
     var i;
     for (i = 0; i < list.length; i++) {
@@ -15,9 +15,14 @@ var getElementsByClassName = function(className) {
     return false;
   }
   var results = [];
-  var parent = document.body;
-  if (contains(parent.classList, className)) {
+  var parent = parent || document.body;
+  if (parent.classList && contains(parent.classList, className)) {
     results.push(parent);
+  }
+  var i;
+  for (i = 0; i < parent.childNodes.length; i++) {
+    var child = parent.childNodes[i];
+    results = results.concat(getElementsByClassName(className, child));
   }
   return results;
 };
